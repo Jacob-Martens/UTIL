@@ -400,3 +400,4 @@ FodyWeavers.xsd
 *.vcxproj
 *.sln
 *.filters
+*.json
