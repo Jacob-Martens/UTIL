@@ -401,3 +401,5 @@ FodyWeavers.xsd
 *.sln
 *.filters
 *.json
+
+build_linux

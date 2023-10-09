@@ -11,7 +11,7 @@ template<typename T>
 UTIL_ThreadsafeQueue<T>::UTIL_ThreadsafeQueue(int max_elements){
     // Validate max elements
     if(max_elements < MIN_MAX_ELEMENTS)
-        max_elements =  MAX_ELEMENTS_INFINITE
+        max_elements =  MAX_ELEMENTS_INFINITE;
     
     this->m_max_elements = max_elements;
     this->m_access_sem = std::make_unique<UTIL_Semaphore>(1, 1);
