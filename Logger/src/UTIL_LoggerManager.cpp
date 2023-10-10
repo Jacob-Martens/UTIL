@@ -9,7 +9,7 @@ UTIL_LoggerManager::UTIL_LoggerManager(UTIL_log_levels filter_level){
 }
 
 UTIL_LoggerManager::~UTIL_LoggerManager(void){
-    this->running = STOPPED;
+    this->running = STOPPING;
     // Log message to wake up queue
     LogMessage(UTIL_LOG_INFO, "Log service shutting down");
     if(this->logging_service_thread.joinable()){
@@ -99,7 +99,7 @@ void UTIL_LoggerManager::LogMessage(UTIL_log_levels level, const char *format_st
 
         final_string << time_string << " : " << level_string << " : " << formatted_string;
 
-        if(this->running){
+        if(this->running != STOPPED){
             this->log_queue->Enqueue(final_string.str());
         }
         else{
@@ -113,14 +113,13 @@ void UTIL_LoggerManager::LogMessage(UTIL_log_levels level, const char *format_st
 }
 
 void UTIL_LoggerManager::ProcessLogQueue(void){
-    while(this->running){
+    while(this->running == RUNNING){
         std::string log = this->log_queue->Dequeue(true);
         if(!log.empty()){
             for(const auto& logger : this->registered_loggers){
                 logger->WriteLog(log);
             }
         }
-
     }
 }
 

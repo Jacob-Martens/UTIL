@@ -403,3 +403,4 @@ FodyWeavers.xsd
 *.json
 
 build_linux
+build_win

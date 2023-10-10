@@ -71,6 +71,7 @@ private:
 
     enum logger_state{
         STOPPED,
+        STOPPING,
         RUNNING
     };
 
