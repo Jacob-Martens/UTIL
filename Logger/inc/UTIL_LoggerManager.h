@@ -6,6 +6,7 @@
 #include <thread>
 #include <map>
 #include <cstdarg>
+#include <algorithm>
 
 #include "UTIL_ThreadsafeQueue.h"
 #include "UTIL_Logger.h"
@@ -40,9 +41,6 @@ public:
 
     // Starts the background logging_service_thread, prevents the registering of any new loggers
     int StartLoggerService(void);
-
-    // Accessor for the running variable, checks to see if the service is running
-    int IsRunning(void);
 
     // Constructs the message struct and enqueues it for the background thread
     void LogMessage(UTIL_log_levels level, const char* format_string, ...);

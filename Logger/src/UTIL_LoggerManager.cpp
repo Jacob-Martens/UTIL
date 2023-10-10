@@ -78,7 +78,8 @@ void UTIL_Log(UTIL_log_levels level, const char* format_string, ...){
 }
 
 void UTIL_LoggerManager::LogMessage(UTIL_log_levels level, const char *format_string, ...){
-    std::string formatted_string, final_string;
+    std::string formatted_string, time_string, level_string; 
+    std::stringstream final_string;
     va_list args, args_copy;
     long long len;
     
@@ -92,15 +93,17 @@ void UTIL_LoggerManager::LogMessage(UTIL_log_levels level, const char *format_st
         formatted_string.resize(len);
         vsnprintf(&formatted_string[0], len+1, format_string, args_copy);
         va_end(args_copy);
+        
+        time_string = this->GenerateTimestamp();
+        level_string = this->level_to_string.at(level);
 
-        final_string = this->GenerateTimestamp();
-        final_string += " : " + this->level_to_string.at(level) + " : ";
-        final_string += formatted_string;
-        if(this->IsRunning()){
-            this->log_queue->Enqueue(final_string);
+        final_string << time_string << " : " << level_string << " : " << formatted_string;
+
+        if(this->running){
+            this->log_queue->Enqueue(final_string.str());
         }
         else{
-            printf("%s\n", formatted_string.c_str());
+            printf("%s\n", final_string.str().c_str());
         }
     }
     else{
@@ -109,24 +112,39 @@ void UTIL_LoggerManager::LogMessage(UTIL_log_levels level, const char *format_st
     }
 }
 
-
 void UTIL_LoggerManager::ProcessLogQueue(void){
     while(this->running){
         std::string log = this->log_queue->Dequeue(true);
         if(!log.empty()){
             for(const auto& logger : this->registered_loggers){
-                //logger->LogMessage
+                logger->WriteLog(log);
             }
         }
 
     }
 }
 
-
-int UTIL_LoggerManager::IsRunning(void){
-    return this->running;
-}
-
 std::string UTIL_LoggerManager::GenerateTimestamp(void){
-    return std::string();
+    // Get clock values
+    auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(
+        std::chrono::system_clock::now().time_since_epoch()).count() % 1000;
+    auto t = std::time(0);
+    auto now = std::localtime(&t);
+
+    // Create string large enough to fit formatted timestamp
+    std::string timestamp;
+    timestamp.resize(sizeof("9999-12-31 29:59:59.9999"));
+    
+    sprintf(&timestamp[0], "%04d-%02d-%02d %02d:%02d:%02d.%ld",
+        now->tm_year + 1900,
+        now->tm_mon + 1,
+        now->tm_mday,
+        now->tm_hour,
+        now->tm_min,
+        now->tm_sec,
+        millis);
+    
+    timestamp.erase(std::find(timestamp.begin(), timestamp.end(), '\0'), timestamp.end());
+
+    return timestamp;
 }

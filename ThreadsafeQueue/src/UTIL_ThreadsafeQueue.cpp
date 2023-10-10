@@ -54,10 +54,14 @@ T UTIL_ThreadsafeQueue<T>::Dequeue(int block){
         this->m_count_sem->Wait();
         this->m_access_sem->Wait();
 
-        new_data = this->m_queue.pop();
+        new_data = this->m_queue.front();
+        this->m_queue.pop();
 
         this->m_access_sem->Post();
     }
 
     return new_data;
 }
+
+// Currently required queue types
+template class UTIL_ThreadsafeQueue<std::string>;
