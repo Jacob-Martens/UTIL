@@ -1,4 +1,14 @@
 #pragma once
+/*
+* FILE          : UTIL_LoggerManager.h
+* PROGRAMMER    : Jacob Martens
+* CREATED       : 09-10-2023
+* DESCRIPTION   :
+* Header file for the LoggerManager class
+* PLANNED FEATURES : 
+* Callable from C++ & C
+* Standalone console app to act as background service
+*/
 #include <memory>
 #include <chrono>
 #include <sstream>
@@ -69,18 +79,20 @@ private:
     std::unique_ptr<UTIL_ThreadsafeQueue<std::string>> log_queue;
     std::vector<std::unique_ptr<UTIL_Logger>> registered_loggers;
 
+    // Enum of possible logger service states
     enum logger_state{
         STOPPED,
         STOPPING,
         RUNNING
     };
 
+    // Map for converting log_level enum to string representation
     const std::map<UTIL_log_levels, std::string> level_to_string = {
         {UTIL_LOG_ERR, "ERROR"},
         {UTIL_LOG_INFO, "INFO"},
         {UTIL_LOG_DEBUG, "DEBUG"}
     };
 
-    const static UTIL_log_levels DEFAULT_MASK = UTIL_LOG_INFO;
+    const static UTIL_log_levels DEFAULT_MASK = UTIL_LOG_INFO;  // Default filter level if one isn't provided
 };
 }

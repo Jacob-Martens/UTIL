@@ -1,3 +1,10 @@
+/*
+* FILE          : logger_test_harness.cpp
+* PROGRAMMER    : Jacob Martens
+* CREATED       : 09-10-2023
+* DESCRIPTION   :
+* C++ test harness for validating the UTIL_LoggerManager system
+*/
 #include "UTIL_LoggerManager.h"
 #include "UTIL_DailyLogger.h"
 #include "UTIL_ConsoleLogger.h"

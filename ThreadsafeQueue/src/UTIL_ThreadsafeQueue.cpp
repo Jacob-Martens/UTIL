@@ -1,5 +1,16 @@
+/*
+* FILE			: UTIL_ThreadsafeQueue.cpp
+* CREATED		: 08/10/2023
+* AUTHOR		: Jacob Martens (jacobmartens@gmail.com)
+* DESCRIPTION	:
+* Source file for the templatizable threadsafe queue
+*/
 #include "UTIL_ThreadsafeQueue.h"
 
+/*
+* Constructor
+* Creates a Threadsafe Queue of type T with no element limit
+*/
 template<typename T>
 UTIL_ThreadsafeQueue<T>::UTIL_ThreadsafeQueue(){
     this->m_max_elements = MAX_ELEMENTS_INFINITE;
@@ -7,6 +18,10 @@ UTIL_ThreadsafeQueue<T>::UTIL_ThreadsafeQueue(){
     this->m_count_sem = std::make_unique<UTIL_Semaphore>(0);
 }
 
+/*
+* Parameterized Constructor
+* Creates a Threadsafe Queue of type T with a size limit of max_elements
+*/
 template<typename T>
 UTIL_ThreadsafeQueue<T>::UTIL_ThreadsafeQueue(int max_elements){
     // Validate max elements
@@ -18,6 +33,10 @@ UTIL_ThreadsafeQueue<T>::UTIL_ThreadsafeQueue(int max_elements){
     this->m_count_sem = std::make_unique<UTIL_Semaphore>(0, max_elements);
 }
 
+/*
+* Enqueue
+* Adds data of type T to the queue
+*/
 template<typename T>
 int UTIL_ThreadsafeQueue<T>::Enqueue(T data){
     int retCode = 0;
@@ -30,10 +49,13 @@ int UTIL_ThreadsafeQueue<T>::Enqueue(T data){
     }
     else{
         try{
+            // Wait for access
             this->m_access_sem->Wait();
 
+            // Enqueue Data
             this->m_queue.push(data);
 
+            // Relinquish access, notify anyone waiting
             this->m_access_sem->Post();
             this->m_count_sem->Post();
         }
@@ -46,6 +68,11 @@ int UTIL_ThreadsafeQueue<T>::Enqueue(T data){
     return retCode;
 }
 
+/*
+* Dequeue
+* Pop data off the queue, returns data
+* If block == 1, this call will block
+*/
 template<typename T>
 T UTIL_ThreadsafeQueue<T>::Dequeue(int block){
     T new_data;
@@ -63,5 +90,6 @@ T UTIL_ThreadsafeQueue<T>::Dequeue(int block){
     return new_data;
 }
 
+// Forward Declarations
 // Currently required queue types
 template class UTIL_ThreadsafeQueue<std::string>;
