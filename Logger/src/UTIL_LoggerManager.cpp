@@ -194,14 +194,14 @@ std::string UTIL_LoggerManager::GenerateTimestamp(void){
     std::string timestamp;
     timestamp.resize(sizeof("9999-12-31 29:59:59.9999"));
     
-    sprintf(&timestamp[0], "%04d-%02d-%02d %02d:%02d:%02d.%ld",
+    sprintf(&timestamp[0], "%04d-%02d-%02d %02d:%02d:%02d.%03d",
         now->tm_year + 1900,
         now->tm_mon + 1,
         now->tm_mday,
         now->tm_hour,
         now->tm_min,
         now->tm_sec,
-        millis);
+        (int)millis);
     
     timestamp.erase(std::find(timestamp.begin(), timestamp.end(), '\0'), timestamp.end());
 
