@@ -128,37 +128,39 @@ void UTIL_LoggerManager::LogMessage(UTIL_log_levels level, const char *format_st
     va_list args, args_copy;
     long long len;
     
-    // Determine required size for formatted string
-    va_start(args, format_string);
-    va_copy(args_copy, args);
+    if (level <= this->log_filter) {
+        // Determine required size for formatted string
+        va_start(args, format_string);
+        va_copy(args_copy, args);
 
-    len = vsnprintf(nullptr, 0, format_string, args);
-    va_end(args);
-    
-    if(len >= 0){
-        // Print the formatter and arguments to formatted string
-        formatted_string.resize(len);
-        vsnprintf(&formatted_string[0], len+1, format_string, args_copy);
-        va_end(args_copy);
-        
-        // Generate timestamp, get level string
-        time_string = this->GenerateTimestamp();
-        level_string = this->level_to_string.at(level);
+        len = vsnprintf(nullptr, 0, format_string, args);
+        va_end(args);
 
-        // Assemble final string
-        final_string << time_string << " : " << level_string << " : " << formatted_string;
+        if (len >= 0) {
+            // Print the formatter and arguments to formatted string
+            formatted_string.resize(len);
+            vsnprintf(&formatted_string[0], len + 1, format_string, args_copy);
+            va_end(args_copy);
 
-        // Enqueue or print 
-        if(this->running != STOPPED){
-            this->log_queue->Enqueue(final_string.str());
+            // Generate timestamp, get level string
+            time_string = this->GenerateTimestamp();
+            level_string = this->level_to_string.at(level);
+
+            // Assemble final string
+            final_string << time_string << " : " << level_string << " : " << formatted_string;
+
+            // Enqueue or print 
+            if (this->running != STOPPED) {
+                this->log_queue->Enqueue(final_string.str());
+            }
+            else {
+                printf("%s\n", final_string.str().c_str());
+            }
         }
-        else{
-            printf("%s\n", final_string.str().c_str());
+        else {
+            va_end(args_copy);
+            printf("LoggerManager : Error processing varargs for %s\n", format_string);
         }
-    }
-    else{
-        va_end(args_copy);
-        printf("LoggerManager : Error processing varargs for %s\n", format_string);
     }
 }
 
@@ -193,7 +195,7 @@ std::string UTIL_LoggerManager::GenerateTimestamp(void){
     // Create string large enough to fit formatted timestamp
     std::string timestamp;
     timestamp.resize(sizeof("9999-12-31 29:59:59.9999"));
-    
+
     sprintf(&timestamp[0], "%04d-%02d-%02d %02d:%02d:%02d.%03d",
         now->tm_year + 1900,
         now->tm_mon + 1,

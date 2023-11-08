@@ -33,6 +33,7 @@ private:
     const int DATESTAMP_SIZE = 16;
 public:
     // Constructor
+    // Throws std::runtime_error if file is invalid
     UTIL_DailyLogger(std::string filepath);
 
     // Writes passed log to current daily file
