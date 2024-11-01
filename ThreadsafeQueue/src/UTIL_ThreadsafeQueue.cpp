@@ -38,7 +38,7 @@ UTIL_ThreadsafeQueue<T>::UTIL_ThreadsafeQueue(int max_elements){
 * Adds data of type T to the queue
 */
 template<typename T>
-int UTIL_ThreadsafeQueue<T>::Enqueue(T data){
+int UTIL_ThreadsafeQueue<T>::Enqueue(const T& data){
     int retCode = 0;
 
     // If max element was specified, ensure new element wouldn't exceed max

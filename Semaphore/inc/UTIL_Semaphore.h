@@ -23,7 +23,7 @@ public:
 	// Creates a UTIL_Semaphore with count of 0 and max_count of infinity
 	UTIL_Semaphore();
 	// Creates a UTIL_Semaphore with provided count and max_count of infinity
-	UTIL_Semaphore(int count);
+	explicit UTIL_Semaphore(int count);
 	// Creates a UTIL_Semaphore with provided count and max_count
 	UTIL_Semaphore(int count, int max_count);
 	
@@ -36,6 +36,6 @@ public:
 	int Wait();
 
 	// Returns the current value of m_count
-	int GetValue();
+	int GetValue() const;
 };
 

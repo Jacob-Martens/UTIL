@@ -61,7 +61,7 @@ public:
 private:
     // Private constructor
     // Sets log_filter to the provided filter_level
-    UTIL_LoggerManager(UTIL_log_levels filter_level);
+    explicit UTIL_LoggerManager(UTIL_log_levels filter_level);
     // This is a singleton class
     static std::shared_ptr<UTIL_LoggerManager> logger_manager;
 
@@ -95,4 +95,3 @@ private:
 
     const static UTIL_log_levels DEFAULT_MASK = UTIL_LOG_INFO;  // Default filter level if one isn't provided
 };
-}

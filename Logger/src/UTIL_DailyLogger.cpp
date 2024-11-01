@@ -13,7 +13,7 @@
 * Validates the given filepath and returns constructed object
 * Throws std::runtime_error if unable to validate filepath
 */
-UTIL_DailyLogger::UTIL_DailyLogger(std::string filepath){
+UTIL_DailyLogger::UTIL_DailyLogger(const std::string& filepath){
     try{
         ValidateFilepath(filepath);
         this->base_filepath = filepath;
@@ -31,7 +31,7 @@ UTIL_DailyLogger::UTIL_DailyLogger(std::string filepath){
 * Verifies filepath is within max size, and has R/W permissions
 * Throws std::runtime_error is unable to validate
 */
-void UTIL_DailyLogger::ValidateFilepath(std::string filepath){
+void UTIL_DailyLogger::ValidateFilepath(const std::string& filepath) const{
     std::string temp_path;
     std::ofstream stream;
 
@@ -88,11 +88,11 @@ void UTIL_DailyLogger::WriteLog(std::string log){
 * Creates & formats a datestamp to append to filename
 * Formatted as -YYYY-MM-DD.log
 */
-std::string UTIL_DailyLogger::GenerateDatestamp(void){
+std::string UTIL_DailyLogger::GenerateDatestamp(void) const{
     std::string formatted_datestamp;
 
     time_t now = time(0);
-    tm* datestamp = localtime(&now);
+    tm const * datestamp = localtime(&now);
     formatted_datestamp.resize(DATESTAMP_SIZE);
     strftime(&formatted_datestamp[0], sizeof(formatted_datestamp), "-%Y-%m-%d.log", datestamp);
 

@@ -29,11 +29,11 @@ public:
     // Creates a Threadsafe Queue with no element limit
     UTIL_ThreadsafeQueue();
     // Creates a Threadsafe Queue with a size limit of max_elements
-    UTIL_ThreadsafeQueue(int max_elements);
+    explicit UTIL_ThreadsafeQueue(int max_elements);
 
     // Adds data to the queue
     // Returns 0 on success, -1 on fail
-    int Enqueue(T data);
+    int Enqueue(const T& data);
 
     // Pops data from the queue
     //      if block == 1, this function will block until data is in the queue

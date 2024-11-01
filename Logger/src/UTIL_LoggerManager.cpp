@@ -123,12 +123,10 @@ void UTIL_Log(UTIL_log_levels level, const char* format_string, ...){
 * If logger isn't active, prints to console
 */
 void UTIL_LoggerManager::LogMessage(UTIL_log_levels level, const char *format_string, ...){
-    std::string formatted_string, time_string, level_string; 
-    std::stringstream final_string;
-    va_list args, args_copy;
-    long long len;
-    
     if (level <= this->log_filter) {
+        va_list args, args_copy;
+        long long len;
+    
         // Determine required size for formatted string
         va_start(args, format_string);
         va_copy(args_copy, args);
@@ -137,6 +135,9 @@ void UTIL_LoggerManager::LogMessage(UTIL_log_levels level, const char *format_st
         va_end(args);
 
         if (len >= 0) {
+            std::string formatted_string, time_string, level_string; 
+            std::stringstream final_string;
+
             // Print the formatter and arguments to formatted string
             formatted_string.resize(len);
             vsnprintf(&formatted_string[0], len + 1, format_string, args_copy);
@@ -190,7 +191,7 @@ std::string UTIL_LoggerManager::GenerateTimestamp(void){
     auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(
         std::chrono::system_clock::now().time_since_epoch()).count() % 1000;
     auto t = std::time(0);
-    auto now = std::localtime(&t);
+    const tm* now = std::localtime(&t);
 
     // Create string large enough to fit formatted timestamp
     std::string timestamp;

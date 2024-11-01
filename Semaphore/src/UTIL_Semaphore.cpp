@@ -47,6 +47,6 @@ int UTIL_Semaphore::Wait(){
 	return this->m_count;
 }
 
-int UTIL_Semaphore::GetValue(){
+int UTIL_Semaphore::GetValue() const{
 	return this->m_count;
 }

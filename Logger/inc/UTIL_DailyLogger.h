@@ -19,10 +19,10 @@
 class UTIL_DailyLogger : public UTIL_Logger{
 private:
     // Validates given filepath is within allowable size and checks R/W perms
-    void ValidateFilepath(std::string filepath);
+    void ValidateFilepath(const std::string& filepath) const;
 
     // Formats a datestamp for appending to the filepath
-    std::string GenerateDatestamp(void);
+    std::string GenerateDatestamp(void) const;
 
     // Base filepath string that datestamp is appended to
     std::string base_filepath;
@@ -34,7 +34,7 @@ private:
 public:
     // Constructor
     // Throws std::runtime_error if file is invalid
-    UTIL_DailyLogger(std::string filepath);
+    explicit UTIL_DailyLogger(const std::string& filepath);
 
     // Writes passed log to current daily file
     void WriteLog(std::string log) override;
