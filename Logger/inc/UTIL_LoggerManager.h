@@ -33,7 +33,7 @@ enum UTIL_log_levels {
 
 void UTIL_Log(UTIL_log_levels level, const char* format_string, ...);
 
-#ifdef ___cplusplus
+#ifdef __cplusplus
 }
 #endif
 
