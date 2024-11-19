@@ -93,3 +93,4 @@ T UTIL_ThreadsafeQueue<T>::Dequeue(int block){
 // Forward Declarations
 // Currently required queue types
 template class UTIL_ThreadsafeQueue<std::string>;
+template class UTIL_ThreadsafeQueue<std::vector<unsigned char>>;
